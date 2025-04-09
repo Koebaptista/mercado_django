@@ -1,0 +1,43 @@
+{% load static %}  <!-- Carregar tags estáticas -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Minha Aplicação{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Estilos, se houver -->
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Início</a></li>
+                <li><a href="{% url 'produtos' %}">Produtos</a></li>
+                <li><a href="{% url 'register' %}">Cadastrar</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+            </ul>
+        </nav>
+
+        <!-- Botão de Logout -->
+        {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% endif %}
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main>
+        {% block content %} 
+        {% endblock %}
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2025 GRUPO 6</p>
+    </footer>
+</body>
+</html>
