@@ -7,6 +7,8 @@ class Produtos(models.Model):
     descricao = models.TextField()
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     quantidade_estoque = models.IntegerField()
+    imagem = models.ImageField(upload_to='produtos/', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Campo para vincular ao usuário
 
     def __str__(self):
         return self.nome

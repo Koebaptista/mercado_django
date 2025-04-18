@@ -1,26 +1,39 @@
-{% extends 'base.html' %}
-
-{% block title %}Produtos - Minha Aplicação{% endblock %}
-
-{% block content %}
+{% load static %}
+{% load socialaccount %}
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Link para o arquivo CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h2>Login</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <label for="username">Nome de usuário:</label>
-        <input type="text" id="username" name="username" required><br><br>
+    <div class="container">
+        <h2>Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="username">Nome de usuário:</label>
+            <input type="text" id="username" name="username" required>
 
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required><br><br>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
 
-        <button type="submit">Entrar</button>
-    </form>
+            <button type="submit">Entrar</button>
+        </form>
+        
+        <hr style="margin: 30px 0;">
+        
+        <!-- Botão de login com Google -->
+        <a href="{% provider_login_url 'google' %}" class="btn-google">
+            <img src="{% static 'img/google-icon.png' %}" alt="Google Icon">
+            Entrar com o Google
+        </a>
+
+        <hr style="margin: 30px 0;">
+
+        <!-- Link para a página de cadastro -->
+        <p>Ainda não tem uma conta? <a href="{% url 'register' %}">Cadastre-se aqui</a></p>
+    </div>
 </body>
 </html>
-{% endblock %}

@@ -11,10 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -30,6 +31,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# Adicione ao INSTALLED_APPS
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +43,30 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'allauth',  # adicione o django-allauth
+    'allauth.account',  # módulo de conta
+    'allauth.socialaccount',  # módulo de contas sociais
+    'allauth.socialaccount.providers.google',  # para Google
+    'django.contrib.sites',
 ]
+
+SITE_ID = 1
+
+# Configuração de Login/Logout
+LOGIN_REDIRECT_URL = '/'  # Página de redirecionamento após login bem-sucedido
+LOGOUT_REDIRECT_URL = '/login'  # Página de redirecionamento após logout
+
+# Configurações do django-allauth
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',  # usa o backend do allauth
+)
+
+# Configurações do email (necessário para criação de conta)
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+# Outras configurações do allauth (opcional, mas recomendado)
+ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'  # Onde redirecionar após login
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -61,6 +86,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'mercado.urls'
@@ -136,3 +162,14 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username', 'password1', 'password2']
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+MEDIA_URL = '/media/'  # URL base para acessar os arquivos de mídia
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Diretório no sistema de arquivos onde os arquivos serão armazenados
+
+
+

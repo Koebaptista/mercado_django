@@ -1,30 +1,44 @@
-{% extends 'base.html' %}
-
-{% block title %}Cadastro - Minha Aplicação{% endblock %}
-
-{% block content %}
-
+{% load static %}
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
     <title>Cadastro</title>
+    <!-- Link para o arquivo CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h2>Cadastro</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <label for="username">Nome de usuário:</label>
-        <input type="text" id="username" name="username" required><br><br>
+    <div class="container">
+        <h2>Cadastro</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="username">Nome de usuário:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <label for="password2">Confirme a senha:</label>
+            <input type="password" id="password2" name="password2" required>
+            
+            <button type="submit">Cadastrar</button>
+        </form>
+        
+        <hr style="margin: 30px 0;">
+        <!-- Botão para cadastro via Google -->
+        <a href="{% provider_login_url 'google' %}" class="btn-google">
+            <img src="{% static 'img/google-icon.png' %}" alt="Google Icon">
+            Cadastre-se com o Google
+        </a>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
+        <hr style="margin: 30px 0;">
 
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required><br><br>
-
-        <label for="password2">Confirme a senha:</label>
-        <input type="password" id="password2" name="password2" required><br><br>
-
-        <button type="submit">Cadastrar</button>
-    </form>
+        <!-- Link para a página de login -->
+        <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login aqui</a></p>
+    </div>
 </body>
 </html>
-{% endblock %}

@@ -1,46 +1,236 @@
+/* Estilos globais */
 body {
-    font-family: Arial, sans-serif;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-}
-
-nav ul {
-    list-style: none;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
     padding: 0;
 }
 
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-
-footer {
-    text-align: center;
-    padding: 10px;
+/* Header */
+header {
     background-color: #333;
     color: white;
-    position: fixed;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header img {
+    width: 100px;
+    height: auto;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+header nav ul li {
+    margin-right: 15px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Botão de logout */
+form button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+form button:hover {
+    background-color: #c82333;
+}
+
+/* Cards de produtos */
+.row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Cards responsivos */
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card-img-top {
     width: 100%;
-    bottom: 0;
+    height: 200px;
+    object-fit: cover; /* Ajusta a imagem ao tamanho do card */
+    border-bottom: 1px solid #ddd;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #28a745;
     color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #218838;
 }
+
+/* Estilos do Header e Footer */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Formulários */
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+form label {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    margin-top: 5px;
+}
+
+/* Botão de login e cadastro */
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    color: #757575;
+    border: 1px solid #dcdcdc;
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 20px;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.btn-google:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-google img {
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+}
+
+/* Container para centralizar os formulários */
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Estilo do carrinho */
+.table th, .table td {
+    text-align: center;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Estilo para os modais de edição e exclusão de produtos */
+.modal-body a {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.modal-body form {
+    display: block;
+}
+
+.modal-body button {
+    width: 100%;
+}
+
+/* Estilos para os botões de navegação e interatividade */
+.nav-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+/* Ajustes para o layout responsivo */
+@media screen and (max-width: 768px) {
+    .row {
+        grid-template-columns: 1fr 1fr; /* Para telas menores, usa dois cards por linha */
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .row {
+        grid-template-columns: 1fr; /* Para telas muito pequenas, usa um card por linha */
+    }
+}
+
+
