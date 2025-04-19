@@ -133,17 +133,17 @@ def adicionar_ao_carrinho(request, id):
         return JsonResponse({'message': 'Produto adicionado ao carrinho.'})  # Feedback de sucesso
     except Exception as e:
         return JsonResponse({'error': f'Ocorreu um erro ao adicionar o produto ao carrinho: {str(e)}'}, status=500)
+    
 
-# Remover do carrinho
 @login_required
 def remover_do_carrinho(request, item_id):
     try:
         item = get_object_or_404(Carrinho, id=item_id, cliente=request.user)
         item.delete()
-        return JsonResponse({'message': 'Produto removido do carrinho.'})  # Feedback de sucesso
+        return JsonResponse({'message': 'Produto removido do carrinho.'}, status=200)  # Sucesso com código 200
     except Exception as e:
         return JsonResponse({'error': f'Ocorreu um erro ao remover o produto do carrinho: {str(e)}'}, status=500)
-
+    
 # Exibir carrinho
 @login_required
 def carrinho(request):

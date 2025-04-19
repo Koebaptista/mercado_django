@@ -1,15 +1,5 @@
 // scripts.js
 
-// Função para confirmar a exclusão do produto no modal
-document.querySelectorAll('.btn-danger').forEach(button => {
-    button.addEventListener('click', function(event) {
-        const confirmation = confirm("Tem certeza de que deseja excluir este produto?");
-        if (!confirmation) {
-            event.preventDefault();  // Cancela a ação de excluir
-        }
-    });
-});
-
 
 document.getElementById('adicionarProdutoForm')?.addEventListener('submit', function(event) {
     event.preventDefault();  // Impede o envio normal do formulário
@@ -36,6 +26,13 @@ document.getElementById('adicionarProdutoForm')?.addEventListener('submit', func
         console.error('Erro ao adicionar produto:', error);
         alert('Ocorreu um erro inesperado.');
     });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const errorMessage = document.querySelector('.alert-danger');
+    if (errorMessage) {
+        alert(errorMessage.textContent); // Exibe a mensagem de erro
+    }
 });
 
 
@@ -95,42 +92,48 @@ document.querySelectorAll('.editarProdutoForm').forEach(form => {
         });
     });
 });
-// Modal de confirmação de exclusão do produto
-document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
-    button.addEventListener('click', function(event) {
-        const produtoId = button.dataset.produtoId;
-        const modal = document.getElementById('produtoModal' + produtoId);
 
-        modal.querySelector('.btn-danger').addEventListener('click', function() {
-            fetch(`/produtos/excluir/${produtoId}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    // Exibe um aviso de sucesso sem recarregar a página
-                    alert(data.message);
-                    modal.querySelector('.modal-close').click();  // Fecha o modal de confirmação
-                    // Aqui você pode remover o produto da lista de produtos diretamente sem recarregar a página
-                    const produtoElement = document.getElementById(`produto-${produtoId}`);
-                    produtoElement.remove();  // Remove o produto da lista
-                } else {
-                    alert('Erro ao excluir o produto.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao excluir o produto:', error);
-                alert('Ocorreu um erro ao excluir o produto.');
-            });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal de confirmação de exclusão do produto
+    document.querySelectorAll('.btn-danger').forEach(button => {
+        button.addEventListener('click', function(event) {
+            const produtoId = button.dataset.produtoId;  // Obtém o ID do produto do botão
+            console.log('Produto ID:', produtoId);  // Verifica se o ID está correto
+            
+            const confirmation = confirm("Tem certeza de que deseja excluir este produto do seu carrinho?");
+            
+            if (confirmation) {
+                // Envia a requisição para excluir o produto do carrinho via AJAX
+                fetch(`/carrinho/remover/${produtoId}/`, {  // Caminho correto da URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
+                    }
+                })
+                .then(response => response.json())  // Corrige a referência ao 'response'
+                .then(data => {
+                    if (data.message) {  // Verifica se a resposta foi bem-sucedida
+                        alert(data.message);  // Exibe a mensagem de sucesso
+                        // Remove o produto da lista diretamente sem recarregar a página
+                        const produtoElement = document.getElementById(`produto-${produtoId}`);
+                        if (produtoElement) {
+                            produtoElement.remove();
+                        }
+                    } else {
+                        alert(data.error || 'Erro desconhecido ao remover o produto.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir o produto:', error);
+                    alert('Ocorreu um erro ao excluir o produto.');
+                });
+            }
         });
     });
 });
-
-
 
 
 // Função de login com o Google
@@ -161,24 +164,34 @@ document.querySelectorAll('.btn-primary').forEach(button => {
     });
 });
 
+document.querySelectorAll('#adicionarCarrinhoForm').forEach(form => {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();  // Impede o envio normal do formulário
 
-document.getElementById('adicionarCarrinhoForm')?.addEventListener('submit', function(event) {
-    event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+        const formData = new FormData(this);
 
-    const formData = new FormData(this);
-
-    fetch(this.action, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert(data.message); // Exibe a mensagem de sucesso
-            // Aqui você pode atualizar o conteúdo da página, como o contador do carrinho
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao adicionar ao carrinho:', error);
+        // Envia a requisição para o backend via AJAX
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value  // Inclui o CSRF Token
+            }
+        })
+        .then(response => response.json())  // Espera resposta JSON
+        .then(data => {
+            if (data.message) {
+                alert(data.message); // Exibe a mensagem de sucesso
+                // Atualiza o contador ou a lista do carrinho conforme necessário
+                console.log('Produto adicionado ao carrinho');
+                // Caso precise redirecionar ou atualizar a UI, faça isso aqui
+            } else {
+                alert('Erro ao adicionar o produto ao carrinho.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao adicionar ao carrinho:', error);
+            alert('Ocorreu um erro inesperado.');
+        });
     });
 });

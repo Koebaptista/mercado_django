@@ -1,5 +1,6 @@
 {% load static %}
 {% load socialaccount %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,6 +12,14 @@
 <body>
     <div class="container">
         <h2>Login</h2>
+
+        <!-- Exibe uma mensagem de erro se houver -->
+        {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+        {% endif %}
+
         <form method="POST">
             {% csrf_token %}
             <label for="username">Nome de usuário:</label>
@@ -21,7 +30,7 @@
 
             <button type="submit">Entrar</button>
         </form>
-        
+
         <hr style="margin: 30px 0;">
         
         <!-- Botão de login com Google -->
