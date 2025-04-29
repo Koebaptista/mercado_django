@@ -17,6 +17,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect, render
+from PIL import Image
+
 
 
 class ProdutosViewSet(viewsets.ModelViewSet):
@@ -154,14 +156,22 @@ def carrinho(request):
     except Exception as e:
         return JsonResponse({'error': f'Ocorreu um erro ao carregar o carrinho: {str(e)}'}, status=500)
 
-# Finalizar a compra
 @login_required
 def finalizar_compra(request):
-    try:
-        # Processo para finalizar a compra
-        return render(request, 'finalizar_compra.html')
-    except Exception as e:
-        return JsonResponse({'error': f'Ocorreu um erro ao finalizar a compra: {str(e)}'}, status=500)
+    if request.method == "POST":
+        itens = Carrinho.objects.filter(cliente=request.user)
+        if not itens.exists():
+            return JsonResponse({"error": "Carrinho vazio"}, status=400)
+
+        total = sum(i.total() for i in itens)
+        Vendas.objects.create(cliente=request.user, total=total)   # ⇐ mudou
+
+        itens.delete()  # limpa carrinho
+        return JsonResponse({"message": "Compra finalizada com sucesso"}, status=200)
+
+    return JsonResponse({"error": "Método não permitido"}, status=405)
+
+
 
 # Página de cadastro
 def register(request):

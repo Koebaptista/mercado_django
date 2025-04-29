@@ -168,7 +168,7 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username', 'password1', 'password2']
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-MEDIA_URL = '/media/'  # URL base para acessar os arquivos de mídia
+MEDIA_URL = 'media/'  # URL base para acessar os arquivos de mídia
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Diretório no sistema de arquivos onde os arquivos serão armazenados
 
 
