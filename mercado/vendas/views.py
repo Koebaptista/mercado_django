@@ -171,52 +171,105 @@ def finalizar_compra(request):
 
     return JsonResponse({"error": "Método não permitido"}, status=405)
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import CustomUserCreationForm  # importe o seu form
 
 
-# Página de cadastro
 def register(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        password2 = request.POST.get('password2')
-
-        if not username or not email or not password or not password2:
-            return JsonResponse({"error": "Todos os campos são obrigatórios."}, status=400)
-
-        if password != password2:
-            return JsonResponse({"error": "As senhas não coincidem."}, status=400)
-
-        if User.objects.filter(username=username).exists():
-            return JsonResponse({"error": "Nome de usuário já está em uso."}, status=400)
-
-        if User.objects.filter(email=email).exists():
-            return JsonResponse({"error": "E-mail já está cadastrado."}, status=400)
-
-        try:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-            return JsonResponse({"message": "Usuário cadastrado com sucesso!"}, status=201)
-        except Exception as e:
-            return JsonResponse({"error": f"Ocorreu um erro ao cadastrar o usuário: {str(e)}"}, status=500)
-    
-    return render(request, 'register.html')
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # mensagem idêntica à do teste CT-014
+            messages.success(request, "Cadastro realizado com sucesso! Faça login.")
+            return redirect('login')
+        else:
+            messages.error(request, "Por favor corrija os erros abaixo.")
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
 # Página de login
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+
+
+from django.contrib.auth import authenticate, login
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.conf import settings
+
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
 
         if not username or not password:
-            return render(request, 'login.html', {'error': 'Todos os campos são obrigatórios.'})
+            return render(request, 'login.html', {
+                'error': 'Todos os campos são obrigatórios.'
+            })
 
         user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            next_url = request.GET.get('next', '/')
-            return redirect(next_url)
-        else:
-            return render(request, 'login.html', {'error': 'Credenciais inválidas. Verifique seu nome de usuário ou senha.'})
+        if user is None:
+            return render(request, 'login.html', {
+                'error': 'Nome de usuário ou senha incorretos'
+            })
+
+        login(request, user)
+
+        # Gerar o JWT (access token) após o login bem-sucedido
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        # Armazenar o JWT no cookie
+        response = redirect('index')  # Redireciona para a página inicial após o login
+
+        # Definir o cookie com o token JWT
+        response.set_cookie(
+            'access_token',  # Nome do cookie
+            access_token,  # Valor do JWT
+            max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],  # Duração do cookie
+            httponly=True,  # Impede acesso via JavaScript
+            secure=settings.DEBUG is False,  # Usa 'secure' somente em produção (em produção)
+            samesite='Strict',  # Restrição de onde o cookie pode ser enviado
+        )
+
+        return response
 
     return render(request, 'login.html')
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import Produtos, Carrinho
+from django.shortcuts import get_object_or_404
+
+class AdicionarProdutoAoCarrinho(APIView):
+    permission_classes = [IsAuthenticated]  # Garante que o usuário está autenticado
+
+    def post(self, request, id):
+        try:
+            # Obtém o produto a partir do ID
+            produto = get_object_or_404(Produtos, id=id)
+
+            # Adiciona o produto ao carrinho ou incrementa a quantidade
+            carrinho_item, created = Carrinho.objects.get_or_create(cliente=request.user, produto=produto)
+
+            if not created:
+                carrinho_item.quantidade += 1
+                carrinho_item.save()
+
+            return Response({'message': 'Produto adicionado ao carrinho com sucesso!'}, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({'error': f'Ocorreu um erro ao adicionar o produto ao carrinho: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

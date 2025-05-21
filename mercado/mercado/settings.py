@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-g5v0oai3&$k0jenznqy^jfc6*u+np$v4-0j#0m6%-u_dxv#918
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['1aa2-2804-389-a3f0-1299-3909-4fd8-8e53-eda7.ngrok-free.app', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -171,5 +172,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 MEDIA_URL = 'media/'  # URL base para acessar os arquivos de mídia
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Diretório no sistema de arquivos onde os arquivos serão armazenados
 
+from datetime import timedelta
 
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=55),  # Expiração do access token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Expiração do refresh token
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+}

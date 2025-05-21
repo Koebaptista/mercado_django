@@ -6,6 +6,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import AdicionarProdutoAoCarrinho
 
 router = DefaultRouter()
 router.register(r'produtos', ProdutosViewSet)
@@ -35,6 +36,7 @@ urlpatterns = [
 
 
     path('produtos/adicionar-ao-carrinho/<int:id>/', views.adicionar_ao_carrinho, name='adicionar_ao_carrinho'),
+    path('adicionar_ao_carrinho/<int:id>/', AdicionarProdutoAoCarrinho.as_view(), name='adicionar_ao_carrinho'),
     path('carrinho/remover/<int:item_id>/', views.remover_do_carrinho, name='remover_do_carrinho'),
     path('finalizar-compra/', views.finalizar_compra, name='finalizar_compra'),
     path('carrinho/', views.carrinho, name='carrinho'),

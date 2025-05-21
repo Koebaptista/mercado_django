@@ -1,0 +1,31 @@
+Relatório de Testes Pytest Detalhado
+===================================
+
+Teste: mercado/tests/tests_unitarios.py::test_adicionar_produto_view_cria_produto
+Identificador: CT-008: Cadastro de Produto (Sucesso)
+Descrição: Validar a criação de um novo produto.
+Entrada: {'nome': 'Produto X', 'descricao': 'Descrição do produto X', 'preco': '100', 'quantidade_estoque': '5', 'imagem': 'produto.jpg'}
+Status: PASSED
+
+Teste: mercado/tests/tests_unitarios.py::test_excluir_produto_view_remove_produto
+Identificador: CT-011: Excluir Produto (Sucesso)
+Descrição: Validar a exclusão de um produto existente.
+Status: PASSED
+
+Teste: mercado/tests/tests_unitarios.py::test_custom_user_creation_form_duplicate_username
+Identificador: CT-015: Cadastro de usuário duplicado (Erro)
+Descrição: Deve rejeitar quando o username já existe no DB.
+Entrada: {'username': 'testuser', 'email': 'novo_email@example.com', 'password1': 'SenhaForte123', 'password2': 'SenhaForte123'}
+Resultado is_valid: False
+Erros capturados: <ul class="errorlist" id="id_username_error"><li>Este nome de usuário já está em uso.</li></ul>
+Status: PASSED
+
+Teste: mercado/tests/tests_unitarios.py::test_produto_form_missing_nome
+Identificador: CT-016: Criação de Produto sem nome (Erro)
+Descrição: Deve rejeitar quando o campo 'nome' estiver ausente.
+Entrada: {'descricao': 'Descrição teste', 'preco': 50, 'quantidade_estoque': 10}
+Resultado is_valid: False
+Erros capturados: <ul class="errorlist"><li>nome<ul class="errorlist" id="id_nome_error"><li>This field is required.</li></ul></li></ul>
+Status: PASSED
+
+Exit status pytest: 0

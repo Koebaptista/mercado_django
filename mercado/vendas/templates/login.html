@@ -1,48 +1,49 @@
 {% load static %}
 {% load socialaccount %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <!-- Link para o arquivo CSS -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h2>Login</h2>
+  <div class="container">
+    <h2>Login</h2>
 
-        <!-- Exibe uma mensagem de erro se houver -->
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error }}
-            </div>
-        {% endif %}
+    {# --- MESSAGES FRAMEWORK --- #}
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
-        <form method="POST">
-            {% csrf_token %}
-            <label for="username">Nome de usuário:</label>
-            <input type="text" id="username" name="username" required>
+    {# --- ERRO EXPLÍCITO NO CONTEXTO (ex.: campos vazios ou credenciais) --- #}
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
 
-            <label for="password">Senha:</label>
-            <input type="password" id="password" name="password" required>
+    <form method="POST">
+      {% csrf_token %}
+      <label for="username">Nome de usuário:</label>
+      <input type="text" id="username" name="username" required>
 
-            <button type="submit">Entrar</button>
-        </form>
+      <label for="password">Senha:</label>
+      <input type="password" id="password" name="password" required>
 
-        <hr style="margin: 30px 0;">
-        
-        <!-- Botão de login com Google -->
-        <a href="{% provider_login_url 'google' %}" class="btn-google">
-            <img src="{% static 'img/google-icon.png' %}" alt="Google Icon">
-            Entrar com o Google
-        </a>
+      <button type="submit">Entrar</button>
+    </form>
 
-        <hr style="margin: 30px 0;">
+    <hr style="margin: 30px 0;">
+    <a href="{% provider_login_url 'google' %}" class="btn-google">
+      <img src="{% static 'img/google-icon.png' %}" alt="Google Icon">
+      Entrar com o Google
+    </a>
 
-        <!-- Link para a página de cadastro -->
-        <p>Ainda não tem uma conta? <a href="{% url 'register' %}">Cadastre-se aqui</a></p>
-    </div>
+    <hr style="margin: 30px 0;">
+    <p>Ainda não tem uma conta? <a href="{% url 'register' %}">Cadastre-se aqui</a></p>
+  </div>
 </body>
 </html>
